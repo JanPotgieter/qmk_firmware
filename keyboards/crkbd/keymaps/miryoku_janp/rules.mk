@@ -1,0 +1,21 @@
+BOOTLOADER             = atmel-dfu
+CAPS_WORD_ENABLE       = yes
+LTO_ENABLE             = yes
+MOUSEKEY_ENABLE        = yes
+EXTRAKEY_ENABLE        = yes
+NKRO_ENABLE            = yes
+RGB_MATRIX_DRIVER      = WS2812
+RGB_MATRIX_ENABLE      = yes
+TAP_DANCE_ENABLE       = no
+UNICODE_ENABLE         = yes
+KEY_OVERRIDE_ENABLE    = yes
+
+BACKLIGHT_ENABLE       = no
+BOOTMAGIC_ENABLE       = no
+CONSOLE_ENABLE         = no
+OLED_DRIVER            = SSD1306
+OLED_ENABLE            = no
+RGBLIGHT_ENABLE        = no
+RGB_MATRIX_CUSTOM_USER = no
+SECURE_ENABLE          = no
+SLEEP_LED_ENABLE       = no
