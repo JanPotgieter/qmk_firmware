@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 enum layers{
   BSE,
-  SN,
+  SYM,
   NAV,
   MSE
 };
@@ -43,26 +43,21 @@ typedef struct {
 } td_tap_t;
 
 enum {
-    SYM,
     BRA,
     COM,
     CUR,
     PAR,
     CPS,
-    UNI_E,
+    UNI,
     SC1,
     SC2,
     SC3,
     SC4,
-    BOOT,
-    UND,
-    CUT
+    BOOT
 };
 
 td_state_t tap_dance(tap_dance_state_t *state);
 
-void sym_finished(tap_dance_state_t *state, void *user_data);
-void sym_reset(tap_dance_state_t *state, void *user_data);
 void bra_finished(tap_dance_state_t *state, void *user_data);
 void bra_reset(tap_dance_state_t *state, void *user_data);
 void com_finished(tap_dance_state_t *state, void *user_data);
@@ -73,8 +68,8 @@ void par_finished(tap_dance_state_t *state, void *user_data);
 void par_reset(tap_dance_state_t *state, void *user_data);
 void cps_finished(tap_dance_state_t *state, void *user_data);
 void cps_reset(tap_dance_state_t *state, void *user_data);
-void uni_e_finished(tap_dance_state_t *state, void *user_data);
-void uni_e_reset(tap_dance_state_t *state, void *user_data);
+void uni_finished(tap_dance_state_t *state, void *user_data);
+void uni_reset(tap_dance_state_t *state, void *user_data);
 void sc1_finished(tap_dance_state_t *state, void *user_data);
 void sc1_reset(tap_dance_state_t *state, void *user_data);
 void sc2_finished(tap_dance_state_t *state, void *user_data);
@@ -85,23 +80,6 @@ void sc4_finished(tap_dance_state_t *state, void *user_data);
 void sc4_reset(tap_dance_state_t *state, void *user_data);
 void boot_finished(tap_dance_state_t *state, void *user_data);
 void boot_reset(tap_dance_state_t *state, void *user_data);
-void und_finished(tap_dance_state_t *state, void *user_data);
-void und_reset(tap_dance_state_t *state, void *user_data);
-void cut_finished(tap_dance_state_t *state, void *user_data);
-void cut_reset(tap_dance_state_t *state, void *user_data);
-
-/*
-TD(CPS)
-  .   CPS_WORD
-  ..  CPS_LOCK
-  -   LSFT
-
-TD(SYM)
-  .   SYM_LOCK
-  ..
-  -   SYM
-*/
-
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [BSE] = LAYOUT_split_3x6_3(
@@ -110,22 +88,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|
                 TD(CPS),        GUI_T(KC_A),        ALT_T(KC_R),        CTL_T(KC_S),        SFT_T(KC_T),               KC_G,                          KC_M,        SFT_T(KC_N),        CTL_T(KC_E),        ALT_T(KC_I),        GUI_T(KC_O),            KC_SCLN,
   //|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|
-                KC_LCTL,        ALT_T(KC_Z),        GUI_T(KC_X),               KC_C,               KC_D,               KC_V,                          KC_K,               KC_H,            KC_COMM,             KC_DOT,              KC_NO,              KC_NO,
+                KC_LCTL,        ALT_T(KC_Z),        GUI_T(KC_X),               KC_C,               KC_D,               KC_V,                          KC_K,               KC_H,            KC_COMM,             KC_DOT,              KC_NO,            KC_ALGR,
   //|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|
-                                                                    LT(MSE, KC_ENT),   LT(NAV, KC_BSPC),            TD(SYM),                         KC_NO,             KC_SPC,             KC_DEL
+                                                                            KC_BSPC,    LT(NAV, KC_TAB),     LT(SYM, KC_NO),               LT(MSE, KC_ENT),             KC_SPC,             KC_DEL
   //                                                            |-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|
 
   ),
 
-  [SN] = LAYOUT_split_3x6_3(
+  [SYM] = LAYOUT_split_3x6_3(
   //|-----------------------------------------------------------------------------------------------------------------------|          |-----------------------------------------------------------------------------------------------------------------------|
                 KC_TILD,             KC_GRV,            KC_EXLM,            KC_QUES,            KC_AMPR,            KC_PIPE,                       KC_ASTR,               KC_7,               KC_8,               KC_9,            KC_PLUS,              KC_NO,
   //|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|
-                KC_LSFT,            TD(COM),            TD(BRA),            TD(CUR),            TD(PAR),            KC_UNDS,                       KC_SLSH,        SFT_T(KC_4),        CTL_T(KC_5),        ALT_T(KC_6),     GUI_T(KC_MINS),            KC_PERC,
+                  KC_NO,            TD(COM),            TD(BRA),            TD(CUR),            TD(PAR),            KC_UNDS,                       KC_SLSH,        SFT_T(KC_4),        CTL_T(KC_5),        ALT_T(KC_6),     GUI_T(KC_MINS),            KC_PERC,
   //|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|
-         CTL_T(KC_CIRC),     ALT_T(KC_BSLS),     GUI_T(KC_HASH),             KC_DLR,              KC_AT,             KC_EQL,                         KC_NO,               KC_1,               KC_2,               KC_3,             KC_DOT,            KC_COMM,
+                KC_CIRC,            KC_BSLS,            KC_HASH,             KC_DLR,              KC_AT,             KC_EQL,                          KC_0,               KC_1,               KC_2,               KC_3,             KC_DOT,            KC_COMM,
   //|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|
-                                                                              KC_NO,            KC_BSPC,            TD(SYM),                          KC_0,             KC_SPC,             KC_ENT
+                                                                            KC_BSPC,             KC_TAB,            KC_TRNS,                        KC_ENT,             KC_SPC,             KC_DEL
   //                                                            |-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|
 
   ),
@@ -136,9 +114,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|
            SFT_T(KC_F7),       GUI_T(KC_F8),       ALT_T(KC_F9),      CTL_T(KC_F10),      SFT_T(KC_F11),             KC_F12,                         KC_NO,            KC_LEFT,            KC_DOWN,              KC_UP,            KC_RGHT,              KC_NO,
   //|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|
-         CTL_T(KC_BRID),     ALT_T(KC_BRIU),     GUI_T(KC_MPLY),            KC_VOLD,            KC_VOLU,            KC_MUTE,                         KC_NO,            KC_LSFT,          TD(UNI_E),        ALT_T(KC_I),        GUI_T(KC_O),              KC_NO,
+                KC_BRID,            KC_BRIU,            KC_MPLY,            KC_VOLD,            KC_VOLU,            KC_MUTE,                       KC_PSCR,            KC_LSFT,            KC_LCTL,            KC_LALT,            KC_LGUI,           TD(BOOT),
   //|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|
-                                                                              KC_NO,            KC_TRNS,              KC_NO,                       KC_BSPC,             KC_SPC,             KC_DEL
+                                                                              KC_NO,            KC_TRNS,              KC_NO,                        KC_ENT,             KC_SPC,             KC_TAB
   //                                                            |-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|
 
   ),
@@ -147,11 +125,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-----------------------------------------------------------------------------------------------------------------------|          |-----------------------------------------------------------------------------------------------------------------------|
                   KC_NO,            G(KC_1),            G(KC_2),            G(KC_3),            G(KC_4),         A(KC_LBRC),                         KC_NO,            KC_WH_L,            KC_WH_D,            KC_WH_U,            KC_WH_R,              KC_NO,
   //|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|
-                KC_LSFT,            TD(SC1),            TD(SC2),            TD(SC3),            TD(SC4),         A(KC_RBRC),                         KC_NO,            KC_MS_L,            KC_MS_D,            KC_MS_U,            KC_MS_R,              KC_NO,
+                  KC_NO,            TD(SC1),            TD(SC2),            TD(SC3),            TD(SC4),         A(KC_RBRC),                         KC_NO,            KC_MS_L,            KC_MS_D,            KC_MS_U,            KC_MS_R,              KC_NO,
   //|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|
-                KC_LCTL,            TD(UND),            TD(CUT),            C(KC_C),            C(KC_Y),            C(KC_V),                         KC_NO,              KC_NO,              KC_NO,              KC_NO,              KC_NO,           TD(BOOT),
+                  KC_NO,              KC_NO,            TD(UNI),               KC_I,               KC_O,              KC_NO,                         KC_NO,              KC_NO,              KC_NO,              KC_NO,              KC_NO,              KC_NO,
   //|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|
-                                                                            KC_TRNS,            KC_PSCR,            KC_SLEP,                       KC_BTN2,            KC_BTN1,            KC_BTN3
+                                                                              KC_NO,            KC_BTN1,            KC_BTN2,                       KC_TRNS,              KC_NO,              KC_NO
   //                                                            |-------------------|-------------------|-------------------|          |-------------------|-------------------|-------------------|
 
   )
@@ -171,34 +149,6 @@ td_state_t tap_dance(tap_dance_state_t *state) {
         if (state->interrupted || !state->pressed) return TD_QUAD_TAP;
         else return TD_UNKNOWN;
     } else return TD_UNKNOWN;
-}
-
-
-
-// SYM
-// Single tap:  [
-// Double tap:  ]
-// Hold:        GUI
-static td_tap_t sym_tap_state = {
-    .is_press_action = true,
-    .state = TD_NONE
-};
-
-void sym_finished(tap_dance_state_t *state, void *user_data) {
-    sym_tap_state.state = tap_dance(state);
-    switch (sym_tap_state.state) {
-        case TD_SINGLE_TAP: layer_on(SN); break;
-        case TD_HOLD: layer_invert(SN); break;
-        default: break;
-    }
-}
-
-void sym_reset(tap_dance_state_t *state, void *user_data) {
-    switch (sym_tap_state.state) {
-        case TD_HOLD: layer_invert(SN); break;
-        default: break;
-    }
-    sym_tap_state.state = TD_NONE;
 }
 
 
@@ -375,15 +325,15 @@ bool isShifted(void) {
 
 
 
-// UNI_E
-static td_tap_t uni_e_tap_state = {
+// UNI
+static td_tap_t uni_tap_state = {
     .is_press_action = true,
     .state = TD_NONE
 };
 
-void uni_e_finished(tap_dance_state_t *state, void *user_data) {
-    uni_e_tap_state.state = tap_dance(state);
-    switch (uni_e_tap_state.state) {
+void uni_finished(tap_dance_state_t *state, void *user_data) {
+    uni_tap_state.state = tap_dance(state);
+    switch (uni_tap_state.state) {
         case TD_HOLD: add_mods(MOD_MASK_CTRL); break;
         case TD_SINGLE_TAP: isShifted() ? send_unicode_string("Ê") : send_unicode_string("ê"); break;
         case TD_DOUBLE_TAP: isShifted() ? send_unicode_string("Ë") : send_unicode_string("ë"); break;
@@ -393,12 +343,12 @@ void uni_e_finished(tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void uni_e_reset(tap_dance_state_t *state, void *user_data) {
-    switch (uni_e_tap_state.state) {
+void uni_reset(tap_dance_state_t *state, void *user_data) {
+    switch (uni_tap_state.state) {
         case TD_HOLD: clear_mods(); break;
         default: break;
     }
-    uni_e_tap_state.state = TD_NONE;
+    uni_tap_state.state = TD_NONE;
 }
 
 
@@ -515,64 +465,6 @@ void sc4_reset(tap_dance_state_t *state, void *user_data) {
 
 
 
-// UND
-// Single tap:  undo
-// Hold:        alt
-static td_tap_t und_tap_state = {
-    .is_press_action = true,
-    .state = TD_NONE
-};
-
-void und_finished(tap_dance_state_t *state, void *user_data) {
-    und_tap_state.state = tap_dance(state);
-    switch (und_tap_state.state) {
-        case TD_SINGLE_TAP: set_oneshot_mods(MOD_BIT(KC_LCTL)); register_code(KC_Z); break;
-        case TD_HOLD: add_mods(MOD_BIT(KC_LALT)); break;
-        default: break;
-    }
-}
-
-void und_reset(tap_dance_state_t *state, void *user_data) {
-    switch (und_tap_state.state) {
-        case TD_SINGLE_TAP: clear_oneshot_mods(); unregister_code(KC_Z); break;
-        case TD_HOLD: clear_mods(); break;
-        default: break;
-    }
-    reset_oneshot_layer();
-    und_tap_state.state = TD_NONE;
-}
-
-
-
-// CUT
-// Single tap:  cut
-// Hold:        gui
-static td_tap_t cut_tap_state = {
-    .is_press_action = true,
-    .state = TD_NONE
-};
-
-void cut_finished(tap_dance_state_t *state, void *user_data) {
-    cut_tap_state.state = tap_dance(state);
-    switch (cut_tap_state.state) {
-        case TD_SINGLE_TAP: set_oneshot_mods(MOD_BIT(KC_LCTL)); register_code(KC_X); break;
-        case TD_HOLD: add_mods(MOD_BIT(KC_LGUI)); break;
-        default: break;
-    }
-}
-
-void cut_reset(tap_dance_state_t *state, void *user_data) {
-    switch (cut_tap_state.state) {
-        case TD_SINGLE_TAP: clear_oneshot_mods(); unregister_code(KC_X); break;
-        case TD_HOLD: clear_mods(); break;
-        default: break;
-    }
-    reset_oneshot_layer();
-    cut_tap_state.state = TD_NONE;
-}
-
-
-
 // BOOT
 // Double tap:  cut
 static td_tap_t boot_tap_state = {
@@ -583,31 +475,33 @@ static td_tap_t boot_tap_state = {
 void boot_finished(tap_dance_state_t *state, void *user_data) {
     boot_tap_state.state = tap_dance(state);
     switch (boot_tap_state.state) {
+        case TD_SINGLE_TAP: register_code(KC_SLEP); break;
         case TD_DOUBLE_TAP: reset_keyboard(); break;
         default: break;
     }
 }
 
 void boot_reset(tap_dance_state_t *state, void *user_data) {
+    switch (boot_tap_state.state) {
+        case TD_SINGLE_TAP: unregister_code(KC_SLEP); break;
+        default: break;
+    }
     boot_tap_state.state = TD_NONE;
 }
 
 
 
 tap_dance_action_t tap_dance_actions[] = {
-    [SYM] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, sym_finished, sym_reset),
     [BRA] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, bra_finished, bra_reset),
     [COM] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, com_finished, com_reset),
     [CUR] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, cur_finished, cur_reset),
     [PAR] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, par_finished, par_reset),
     [CPS] = ACTION_TAP_DANCE_FN_ADVANCED(cps_on_each_tap, cps_finished, cps_reset),
-    [UNI_E] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, uni_e_finished, uni_e_reset),
+    [UNI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, uni_finished, uni_reset),
     [SC1] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, sc1_finished, sc1_reset),
     [SC2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, sc2_finished, sc2_reset),
     [SC3] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, sc3_finished, sc3_reset),
     [SC4] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, sc4_finished, sc4_reset),
-    [UND] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, und_finished, und_reset),
-    [CUT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, cut_finished, cut_reset),
     [BOOT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, boot_finished, boot_reset)
 };
 
@@ -621,8 +515,10 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-
-static bool is_tt_sn_held = false;
+void keyboard_post_init_user(void) {
+    rgb_matrix_enable();
+    rgb_matrix_set_color_all(RGB_OFF);
+}
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (host_keyboard_led_state().caps_lock) {
@@ -634,11 +530,9 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         rgb_matrix_set_color(9, RGB_ORANGE);
     }
     switch(get_highest_layer(layer_state|default_layer_state)) {
-        case SN:
-            if (!is_tt_sn_held) {
-                rgb_matrix_set_color(9, RGB_CYAN);
-                rgb_matrix_set_color(36, RGB_CYAN);
-            }
+        case SYM:
+            rgb_matrix_set_color(9, RGB_CYAN);
+            rgb_matrix_set_color(36, RGB_CYAN);
             break;
         default:
             break;
@@ -647,7 +541,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (IS_LAYER_ON(NAV)) {
+    if (IS_LAYER_ON(MSE)) {
         switch (keycode) {
             case KC_I:
                 if (record->event.pressed) send_unicode_string("ï");
@@ -659,13 +553,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
     } else {
         switch (keycode) {
-            case TT(SN):
-                if (record->event.pressed) {
-                    is_tt_sn_held = true;
-                } else {
-                    is_tt_sn_held = false;
-                }
-                return true;
             case TD(CPS):
                 if (record->event.pressed) {
                     is_td_cps_held = true;
